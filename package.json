@@ -1,0 +1,19 @@
+{
+  "author": "Nathan Fang <me@nfang.me> (blog.nfang.me)",
+  "name": "node-web-crawler",
+  "description": "A simple web crawler",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nfang/node-web-crawler.git"
+  },
+  "main": "crawler.js",
+  "engines": {
+    "node": "~0.6.6"
+  },
+  "dependencies": {
+    "require": "0.4.6",
+    "jsdom": "0.2.0"
+  },
+  "devDependencies": {}
+}
