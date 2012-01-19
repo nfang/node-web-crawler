@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "require": "0.4.6",
-    "jsdom": "0.2.0"
+    "jsdom": "0.2.10"
   },
   "devDependencies": {}
 }
