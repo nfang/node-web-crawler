@@ -34,6 +34,20 @@ Crawler.prototype.enqueue = function (target) {
   this.crawl();
 }
 
+Crawler.prototype.range = function (base, min, max, inc) {
+  if (!base) throw new Error('Base URL cannot be null.');
+
+  if ((!min && min !== 0) || (!max && max !== 0)) throw new Error('Invalid range.');
+
+  // Normalize base URL
+  if (base.substr(-1) !== '/') 
+    base = base + '/';
+
+  for (var i = min; i < max; i += inc || 1) {
+    this.enqueue(base + i.toString());
+  }
+}
+
 Crawler.prototype.crawl = function () {
   var item = {};
 
@@ -45,22 +59,24 @@ Crawler.prototype.crawl = function () {
         uri: item.url, method: 'GET'
       },
       function (error, response, body) {
-        if (error || response.statusCode !== 200) 
+        if (error) 
           throw new Error('request(): ' + JSON.stringify(error));
-        
-        jsdom.env({
-          html: body
-          , scripts: ['http://code.jquery.com/jquery-1.7.1.min.js']
-          , done: function (error, window) {
-              if (error) throw new Error('jsdom.done(): ' + JSON.stringify(error));
-              
-              if (item.callback && typeof item.callback === 'function') {
-                item.callback.apply(window);
-              } else {
-                item.defaultCallback.apply(window);
+
+        if (response.statusCode === 200) {
+          jsdom.env({
+            html: body
+            , scripts: ['http://code.jquery.com/jquery-1.7.1.min.js']
+            , done: function (error, window) {
+                if (error) throw new Error('jsdom.done(): ' + JSON.stringify(error));
+                
+                if (item.callback && typeof item.callback === 'function') {
+                  item.callback.apply(window);
+                } else {
+                  item.defaultCallback.apply(window);
+                }
               }
-            }
-        });
+          });
+        }
       }
     );
   }
